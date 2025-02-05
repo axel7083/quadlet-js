@@ -49,6 +49,10 @@ export function stringify(data: IIniObject, params?: IStringifyConfig): string {
         if (!sectionKeys) {
           break;
         }
+      } else if (sectionKeys && Array.isArray(val)) {
+        val.forEach((item) => {
+          chunks.push(formatPare(curKey, item.toString()));
+        });
       } else if (typeof val === 'object') {
         if (sectionKeys) {
           throw new Error('too much nesting');
