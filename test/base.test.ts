@@ -149,6 +149,11 @@ second = 1
 second = 2
 another = 1`;
 
+const ini12 = `
+[hello]
+fooKey=value1
+fooKey=value2`;
+
 const v1 = {
   v1: 2,
   'v-2': true,
@@ -189,6 +194,12 @@ const v3 = {
     'qpo[weiktjkgtjgiqewrjgoepqrg',
     'qwlfp-[weklfpowek,mf',
   ],
+};
+
+const v4 = {
+  hello: {
+    fooKey: ['value1', 'value2'],
+  },
 };
 
 describe('base js-ini test', () => {
@@ -250,6 +261,15 @@ describe('base js-ini test', () => {
       dataSections: ['test scope with data'],
       autoTyping: false,
     })).toEqual(v3);
+  });
+
+  it('ini stringify multiple value', () => {
+    // identity
+    expect(parse(stringify(v4), {
+      keyMergeStrategy: 'join-to-array',
+    })).toEqual(v4);
+    // stringify
+    expect(stringify(v4)).toBe(ini12);
   });
 
   it('ini parsing: proto', () => {
