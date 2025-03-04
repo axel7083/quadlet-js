@@ -2,8 +2,8 @@
   "name": "js-ini",
   "version": "1.6.0",
   "description": "parsing and serialize ini files",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sdju/js-ini.git"
