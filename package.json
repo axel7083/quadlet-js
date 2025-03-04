@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/Sdju/js-ini.git"
   },
+  "files": ["dist"],
   "bugs": {
     "email": "zede@mail.ru",
     "src": "https://github.com/Sdju/js-ini/issues"
