@@ -1,6 +1,5 @@
 import dts from 'vite-plugin-dts';
-import type { UserConfig } from "vite";
-import { join } from 'node:path';
+import type { UserConfig } from 'vite';
 
 const PACKAGE_ROOT = __dirname;
 
@@ -12,7 +11,7 @@ const config: UserConfig = {
    * A Vite plugin that generates declaration files
    */
   plugins: [dts({
-    tsconfigPath: join(PACKAGE_ROOT, 'tsconfig.min.json'),
+    rollupTypes: true,
   })],
   build: {
     sourcemap: 'inline',
@@ -22,11 +21,11 @@ const config: UserConfig = {
     minify: process.env.MODE === 'production' ? 'esbuild' : false,
     lib: {
       entry: 'src/index.ts',
-      formats: ['es'],
+      formats: ['cjs'],
     },
     rollupOptions: {
       output: {
-        entryFileNames: '[name].js',
+        entryFileNames: '[name].cjs',
       },
     },
     emptyOutDir: true,

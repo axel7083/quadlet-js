@@ -2,7 +2,7 @@
   "name": "js-ini",
   "version": "1.6.0",
   "description": "parsing and serialize ini files",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
