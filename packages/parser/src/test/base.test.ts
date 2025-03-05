@@ -274,17 +274,17 @@ describe('base js-ini test', () => {
   });
 
   it('autotype throwing an error with nothrow to true should aggregate the errors', () => {
-    expect(parse(ini6, {
-      nothrow: true,
-      protoSymbol: true,
-      autoTyping: () => {
-        throw new Error('dummy error');
-      },
-    })).toEqual({
+    expect(
+      parse(ini6, {
+        nothrow: true,
+        protoSymbol: true,
+        autoTyping: () => {
+          throw new Error('dummy error');
+        },
+      }),
+    ).toEqual({
       [$Proto]: {}, // no section has nothing was parsed successfully
-      [$Errors]: [
-        new ParsingError('polluted = "polluted"', 3, 'dummy error'),
-      ],
+      [$Errors]: [new ParsingError('polluted = "polluted"', 3, 'dummy error')],
     });
   });
 

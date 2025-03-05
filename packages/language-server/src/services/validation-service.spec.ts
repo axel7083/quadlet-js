@@ -11,12 +11,10 @@ function fromString(content: string, languageId = ''): TextDocument {
   return TextDocument.create('fake-uri', languageId, 0, content);
 }
 
-test(
-    'key without section ',
-    async () => {
-      const errors = await validation.doValidation(fromString('Annotation=foo=bar', 'container'));
-      expect(errors).toHaveLength(1);
-    });
+test('key without section ', async () => {
+  const errors = await validation.doValidation(fromString('Annotation=foo=bar', 'container'));
+  expect(errors).toHaveLength(1);
+});
 
 test('simple ini ', async () => {
   const errors = await validation.doValidation(fromString('[Container]\nAnnotation=foo=bar', 'container'));
