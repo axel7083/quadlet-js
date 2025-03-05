@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "vite": "latest",
-    "vitest": "latest"
+    "vitest": "latest",
+    "prettier": "^3.5.3"
   },
   "workspaces": [
     "packages/*"
