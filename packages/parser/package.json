@@ -14,10 +14,10 @@
     "src": "https://github.com/Sdju/js-ini/issues"
   },
   "scripts": {
-    "test": "vitest run",
-    "test-watch": "vitest",
+    "test": "../../node_modules/.bin/vitest run",
+    "test-watch": "../../node_modules/.bin/vitest",
     "lint": "eslint --cache --ext .ts src test",
-    "build": "vite build",
+    "build": "../../node_modules/.bin/vite build",
     "publish": "npm run lint && npm run test && npm run build && npm publish"
   },
   "husky": {
