@@ -1,0 +1,47 @@
+{
+  "name": "js-ini",
+  "version": "1.6.0",
+  "description": "parsing and serialize ini files",
+  "main": "dist/index.cjs",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sdju/js-ini.git"
+  },
+  "files": ["dist"],
+  "bugs": {
+    "email": "zede@mail.ru",
+    "src": "https://github.com/Sdju/js-ini/issues"
+  },
+  "scripts": {
+    "test": "../../node_modules/.bin/vitest run",
+    "test-watch": "../../node_modules/.bin/vitest",
+    "lint": "eslint --cache --ext .ts src test",
+    "build": "../../node_modules/.bin/vite build",
+    "publish": "npm run lint && npm run test && npm run build && npm publish"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run test"
+    }
+  },
+  "keywords": [
+    "ini",
+    "parse"
+  ],
+  "author": "Denis Chernov<zede1697@mail.ru>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "esbuild": "^0.17.8",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^7.2.0",
+    "eslint-plugin-import": "^2.20.2",
+    "husky": "^4.2.3",
+    "typescript": "^4.9.5",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.3",
+    "vitest": "^2.1.6"
+  }
+}
