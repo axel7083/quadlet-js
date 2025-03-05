@@ -1,58 +1,40 @@
-import { $Errors, ParsingError, ProtoError } from './errors';
+import { $Errors, ParsingError } from './errors';
 import type { IIniObject } from './interfaces/ini-object';
-import type { IniValue } from './types/ini-value';
 import type { IIniObjectSection } from './interfaces/ini-object-section';
 import { autoType } from './helpers/auto-type';
 import type { ICustomTyping } from './interfaces/custom-typing';
-import { $Proto } from './proto';
-
-export const KeyMergeStrategies = {
-  OVERRIDE: 'override',
-  JOIN_TO_ARRAY: 'join-to-array',
-} as const;
-export type KeyMergeStrategyName = (typeof KeyMergeStrategies)[keyof typeof KeyMergeStrategies];
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type KeyMergeStrategyFunction = (section: IIniObjectSection, name: string, value: any) => void;
+import { $Metadata } from './metadata';
+import type { IniValue } from './types/ini-value';
 
 export interface IParseConfig {
   comment?: string | string[];
   delimiter?: string;
   nothrow?: boolean;
   autoTyping?: boolean | ICustomTyping;
-  keyMergeStrategy?: KeyMergeStrategyName | KeyMergeStrategyFunction;
-  dataSections?: string[];
-  protoSymbol?: boolean;
 }
 
 // Regex to capture section names in [section] lines.
 const sectionNameRegex = /\[(.*)]$/;
 
-export function parse(data: string, params?: IParseConfig): IIniObject {
-  const {
-    delimiter = '=',
-    comment = ';',
-    nothrow = false,
-    autoTyping = true,
-    dataSections = [],
-    protoSymbol = false,
-    keyMergeStrategy = KeyMergeStrategies.OVERRIDE,
-  } = { ...params };
+export function parse(
+  data: string,
+  params: IParseConfig & { nothrow: true },
+): IIniObject & {
+  [$Errors]: ParsingError[];
+};
+export function parse(data: string, params?: IParseConfig): IIniObject;
+
+export function parse(data: string, params: IParseConfig = {}): IIniObject {
+  const { delimiter = '=', comment = ';', nothrow = false, autoTyping = true } = { ...params };
 
   // Determine the type parser function to use.
   const typeParser: ICustomTyping =
     typeof autoTyping === 'function' ? autoTyping : autoTyping ? autoType : (val: string): string => val;
 
-  // Identify which key merge strategy is in use.
-  const isOverrideStrategy = keyMergeStrategy === KeyMergeStrategies.OVERRIDE;
-  const isJoinStrategy = !isOverrideStrategy && keyMergeStrategy === KeyMergeStrategies.JOIN_TO_ARRAY;
-  const isCustomStrategy = !isOverrideStrategy && !isJoinStrategy && typeof keyMergeStrategy === 'function';
-
   // Prepare the initial state.
   const lines: string[] = data.split(/\r?\n/g);
   let lineNumber = 0;
-  let currentSection = '';
-  let isDataSection = false;
+  let currentSection: string | undefined = undefined;
   const result: IIniObject = {};
   const commentChars = Array.isArray(comment) ? comment : [comment];
 
@@ -83,42 +65,33 @@ export function parse(data: string, params?: IParseConfig): IIniObject {
       if (match) {
         currentSection = match[1].trim();
 
-        // Special handling for '__proto__' section.
-        if (currentSection === '__proto__') {
-          if (protoSymbol) {
-            currentSection = $Proto as unknown as string;
-          } else {
-            throw new ProtoError(lineNumber);
-          }
-        }
-
-        // Determine if this section should be treated as a data section.
-        isDataSection = dataSections.includes(currentSection);
-
         // Initialize the section if it hasn't been set yet.
         if (!(currentSection in result)) {
-          // Use an array for data sections; otherwise, use a plain object.
-          // eslint-disable-next-line no-null/no-null
-          result[currentSection] = isDataSection ? [] : Object.create(null);
+          result[currentSection] = {
+            [$Metadata]: {
+              lineNumber,
+            },
+          };
         }
         continue;
       }
     }
 
-    // If currently in a data section, simply store the raw line.
-    if (isDataSection) {
-      (result[currentSection] as IniValue[]).push(rawLine);
+    /**
+     * Do not allow entry at root level
+     */
+    if (!currentSection) {
+      recordError(new ParsingError(line, lineNumber));
       continue;
     }
 
     // Process key-value pair lines.
     if (line.includes(delimiter)) {
-      const posOfDelimiter = line.indexOf(delimiter);
-      const name = line.slice(0, posOfDelimiter).trim();
-      const rawVal = line.slice(posOfDelimiter + 1).trim();
+      const posOfDelimiter: number = line.indexOf(delimiter);
+      const name: string = line.slice(0, posOfDelimiter).trim();
+      const rawVal: string = line.slice(posOfDelimiter + 1).trim();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let val: any;
+      let val: boolean | number | string | undefined;
       try {
         val = typeParser(rawVal, currentSection, name);
       } catch (err: unknown) {
@@ -128,21 +101,27 @@ export function parse(data: string, params?: IParseConfig): IIniObject {
         continue;
       }
 
-      // Determine the target section or use the root if not inside any section.
-      const section = currentSection !== '' ? (result[currentSection] as IIniObjectSection) : result;
+      // raise an error for undefined value (forbid empty entry)
+      if (val === undefined) {
+        recordError(new ParsingError(line, lineNumber));
+        continue;
+      }
+
+      const iniValue: IniValue = {
+        value: val,
+        [$Metadata]: {
+          lineNumber,
+        },
+      };
+
+      const section: IIniObjectSection = result[currentSection];
 
       // Merge the key-value pair based on the selected strategy.
-      if (isOverrideStrategy) {
-        section[name] = val;
-      } else if (isJoinStrategy) {
-        if (name in section) {
-          const oldVal = section[name];
-          section[name] = Array.isArray(oldVal) ? [...oldVal, val] : [oldVal, val];
-        } else {
-          section[name] = val;
-        }
-      } else if (isCustomStrategy) {
-        keyMergeStrategy(section, name, val);
+      if (name in section) {
+        const oldVal = section[name];
+        section[name] = Array.isArray(oldVal) ? [...oldVal, iniValue] : [oldVal, iniValue];
+      } else {
+        section[name] = iniValue;
       }
       continue;
     }
