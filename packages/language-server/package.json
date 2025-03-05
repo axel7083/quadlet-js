@@ -10,7 +10,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "vite build",
-    "test": "vitest run --coverage --passWithNoTests"
+    "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
     "typescript": "5.7.3",
@@ -21,7 +21,7 @@
     "vscode-languageserver-types": "^3.17.5"
   },
   "dependencies": {
-    "@quadlet/parser": "^0.0.5"
+    "@quadlet/parser": "workspace:^"
   },
   "files": [
     "dist"

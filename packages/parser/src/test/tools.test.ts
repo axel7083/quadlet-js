@@ -1,10 +1,8 @@
-import {
-  describe, it, expect, beforeAll, afterAll, afterEach,
-} from 'vitest';
-import { join } from 'path';
-import { promises as fs } from 'fs';
-import { readIniFile } from '../src/tools/read-ini-file';
-import { writeIniFile } from '../src/tools/write-ini-file';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { join } from 'node:path';
+import { promises as fs } from 'node:fs';
+import { readIniFile } from '../tools/read-ini-file';
+import { writeIniFile } from '../tools/write-ini-file';
 
 const ini1 = `v1 : 2
 v-2:true
