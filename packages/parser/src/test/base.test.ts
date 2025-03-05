@@ -211,7 +211,7 @@ describe('base js-ini test', () => {
         v2: 'what',
         v5: 'who is who = who',
       },
-      'test scope with data': ['b1c,wdwd,15:68', "wx/w':wwdlw,:d,wld", 'efkeofk'],
+      'test scope with data': ['b1c,wdwd,15:68', `wx/w':wwdlw,:d,wld`, 'efkeofk'],
     });
   });
 
