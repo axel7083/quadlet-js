@@ -1,8 +1,5 @@
 import type { TextDocument } from 'vscode-languageserver-textdocument';
-import type {
-  Position,
-  Hover, Diagnostic,
-} from 'vscode-languageserver-types';
+import type { Position, Hover, Diagnostic } from 'vscode-languageserver-types';
 
 export interface LanguageService {
   // configure: (settings: LanguageSettings) => void;

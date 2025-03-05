@@ -1,12 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import {
-  parse,
-  stringify,
-  $Proto,
-  $Errors,
-  ParsingError,
-} from '../src';
-import type { IIniObjectSection } from '../src';
+import { parse, stringify, $Proto, $Errors, ParsingError } from '../index';
+import type { IIniObjectSection } from '../index';
 
 const ini1 = `v1 = 2
 v-2=true
@@ -189,11 +183,7 @@ const v3 = {
     v2: 'what',
     v5: 'who is who = who',
   },
-  'test scope with data': [
-    'mfkl;wemfvvlkj;sdafn bv',
-    'qpo[weiktjkgtjgiqewrjgoepqrg',
-    'qwlfp-[weklfpowek,mf',
-  ],
+  'test scope with data': ['mfkl;wemfvvlkj;sdafn bv', 'qpo[weiktjkgtjgiqewrjgoepqrg', 'qwlfp-[weklfpowek,mf'],
 };
 
 const v4 = {
@@ -212,33 +202,30 @@ describe('base js-ini test', () => {
 
     expect(parse(ini2, { comment: '#', delimiter: ':', autoTyping: false })).toEqual(v2);
 
-    expect(parse(ini5, { delimiter: ':', dataSections: ['test scope with data'] }))
-      .toEqual({
-        v1: 2,
-        'v-2': true,
-        'v 3': 'string',
-        smbd: {
-          v1: 5,
-          v2: 'what',
-          v5: 'who is who = who',
-        },
-        'test scope with data': [
-          'b1c,wdwd,15:68',
-          'wx/w\':wwdlw,:d,wld',
-          'efkeofk',
-        ],
-      });
+    expect(parse(ini5, { delimiter: ':', dataSections: ['test scope with data'] })).toEqual({
+      v1: 2,
+      'v-2': true,
+      'v 3': 'string',
+      smbd: {
+        v1: 5,
+        v2: 'what',
+        v5: 'who is who = who',
+      },
+      'test scope with data': ['b1c,wdwd,15:68', `wx/w':wwdlw,:d,wld`, 'efkeofk'],
+    });
   });
 
   it('ini stringify', () => {
     expect(stringify(v1)).toBe(ini3);
 
-    expect(stringify(v1, {
-      blankLine: false,
-      delimiter: ':',
-      spaceAfter: true,
-      spaceBefore: false,
-    })).toBe(ini4);
+    expect(
+      stringify(v1, {
+        blankLine: false,
+        delimiter: ':',
+        spaceAfter: true,
+        spaceBefore: false,
+      }),
+    ).toBe(ini4);
 
     expect(() => {
       stringify({
@@ -257,72 +244,68 @@ describe('base js-ini test', () => {
       });
     }).toThrow();
 
-    expect(parse(stringify(v3), {
-      dataSections: ['test scope with data'],
-      autoTyping: false,
-    })).toEqual(v3);
+    expect(
+      parse(stringify(v3), {
+        dataSections: ['test scope with data'],
+        autoTyping: false,
+      }),
+    ).toEqual(v3);
   });
 
   it('ini stringify multiple value', () => {
     // identity
-    expect(parse(stringify(v4), {
-      keyMergeStrategy: 'join-to-array',
-    })).toEqual(v4);
+    expect(
+      parse(stringify(v4), {
+        keyMergeStrategy: 'join-to-array',
+      }),
+    ).toEqual(v4);
     // stringify
     expect(stringify(v4)).toBe(ini12);
   });
 
   it('ini parsing: proto', () => {
-    expect(() => parse(ini6))
-      .toThrow('Unsupported section name "__proto__": [2]"');
+    expect(() => parse(ini6)).toThrow('Unsupported section name "__proto__": [2]"');
 
-    expect(parse(ini6, { protoSymbol: true }))
-      .toEqual({
-        [$Proto]: {
-          polluted: '"polluted"',
-        },
-      });
+    expect(parse(ini6, { protoSymbol: true })).toEqual({
+      [$Proto]: {
+        polluted: '"polluted"',
+      },
+    });
   });
 
   it('ini parsing: errors', () => {
-    expect(() => parse(ini7))
-      .toThrow('Unsupported type of line: [4] "trash"');
+    expect(() => parse(ini7)).toThrow('Unsupported type of line: [4] "trash"');
 
-    expect(parse(ini7, { nothrow: true }))
-      .toEqual({
-        'scope with trash': {
-          ok: 'value',
-        },
-        'scope with only trash': {},
-        'empty scope': {},
-        'normal scope': {
-          ok: 'value',
-        },
-        [$Errors]: [
-          new ParsingError('trash', 4),
-          new ParsingError('only trash', 7),
-        ],
-      });
+    expect(parse(ini7, { nothrow: true })).toEqual({
+      'scope with trash': {
+        ok: 'value',
+      },
+      'scope with only trash': {},
+      'empty scope': {},
+      'normal scope': {
+        ok: 'value',
+      },
+      [$Errors]: [new ParsingError('trash', 4), new ParsingError('only trash', 7)],
+    });
   });
 
   it('ini parsing: autotype', () => {
-    expect(parse(ini8, { nothrow: true, autoTyping: true }))
-      .toEqual({
-        section: {
-          isTrue: true,
-          IsTrue: true,
-          isFalse: false,
-          IsFalse: false,
-          isHex: 0xFf0066,
-          is5: 5,
-          'is5.3': 5.3,
-          isIp: '128.0.0.1',
-          is0: 0,
-          isNaN: NaN,
-          isNULL: null,
-          isUndefined: undefined,
-        },
-      });
+    expect(parse(ini8, { nothrow: true, autoTyping: true })).toEqual({
+      section: {
+        isTrue: true,
+        IsTrue: true,
+        isFalse: false,
+        IsFalse: false,
+        isHex: 0xff0066,
+        is5: 5,
+        'is5.3': 5.3,
+        isIp: '128.0.0.1',
+        is0: 0,
+        isNaN: NaN,
+        isNULL: undefined,
+        isUndefined: undefined,
+      },
+    });
   });
 
   it('ini stringify: infinity fix test', () => {
@@ -356,7 +339,8 @@ describe('base js-ini test', () => {
       },
     });
 
-    const customMergeStrategy = (section: IIniObjectSection, name: string, val: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const customMergeStrategy = (section: IIniObjectSection, name: string, val: any): void => {
       // eslint-disable-next-line no-param-reassign
       section[name] = name in section ? `${section[name]}|${val.toString()}` : val.toString();
     };

@@ -1,23 +1,19 @@
-import {
-  $Errors,
-  ParsingError,
-  ProtoError,
-} from './errors';
-import { IIniObject } from './interfaces/ini-object';
-import { IniValue } from './types/ini-value';
-import { IIniObjectSection } from './interfaces/ini-object-section';
+import { $Errors, ParsingError, ProtoError } from './errors';
+import type { IIniObject } from './interfaces/ini-object';
+import type { IniValue } from './types/ini-value';
+import type { IIniObjectSection } from './interfaces/ini-object-section';
 import { autoType } from './helpers/auto-type';
-import { ICustomTyping } from './interfaces/custom-typing';
+import type { ICustomTyping } from './interfaces/custom-typing';
 import { $Proto } from './proto';
 
 export const KeyMergeStrategies = {
   OVERRIDE: 'override',
   JOIN_TO_ARRAY: 'join-to-array',
 } as const;
-export type KeyMergeStrategyName = typeof KeyMergeStrategies[keyof typeof KeyMergeStrategies];
+export type KeyMergeStrategyName = (typeof KeyMergeStrategies)[keyof typeof KeyMergeStrategies];
 
-export type KeyMergeStrategyFunction =
-  (section: IIniObjectSection, name: string, value: any) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type KeyMergeStrategyFunction = (section: IIniObjectSection, name: string, value: any) => void;
 
 export interface IParseConfig {
   comment?: string | string[];
@@ -45,15 +41,12 @@ export function parse(data: string, params?: IParseConfig): IIniObject {
   if (typeof autoTyping === 'function') {
     typeParser = autoTyping;
   } else {
-    typeParser = autoTyping ? autoType : (val) => val;
+    typeParser = autoTyping ? autoType : (val: string): string => val;
   }
 
   const isOverrideStrategy = keyMergeStrategy === KeyMergeStrategies.OVERRIDE;
-  const isJoinStrategy = !isOverrideStrategy
-    && (keyMergeStrategy === KeyMergeStrategies.JOIN_TO_ARRAY);
-  const isCustomStrategy = !isOverrideStrategy
-    && !isJoinStrategy
-    && typeof keyMergeStrategy === 'function';
+  const isJoinStrategy = !isOverrideStrategy && keyMergeStrategy === KeyMergeStrategies.JOIN_TO_ARRAY;
+  const isCustomStrategy = !isOverrideStrategy && !isJoinStrategy && typeof keyMergeStrategy === 'function';
 
   const lines: string[] = data.split(/\r?\n/g);
   let lineNumber = 0;
@@ -65,7 +58,7 @@ export function parse(data: string, params?: IParseConfig): IIniObject {
   for (const rawLine of lines) {
     lineNumber += 1;
     const line: string = rawLine.trim();
-    if ((line.length === 0) || commentChars.some((char) => line.startsWith(char))) {
+    if (line.length === 0 || commentChars.some(char => line.startsWith(char))) {
       continue;
     } else if (line[0] === '[') {
       const match = line.match(sectionNameRegex);
@@ -80,7 +73,8 @@ export function parse(data: string, params?: IParseConfig): IIniObject {
         }
         isDataSection = dataSections.includes(currentSection);
         if (!(currentSection in result)) {
-          result[currentSection] = (isDataSection) ? [] : Object.create(null);
+          // eslint-disable-next-line no-null/no-null
+          result[currentSection] = isDataSection ? [] : Object.create(null);
         }
         continue;
       }
@@ -92,7 +86,7 @@ export function parse(data: string, params?: IParseConfig): IIniObject {
       const name = line.slice(0, posOfDelimiter).trim();
       const rawVal = line.slice(posOfDelimiter + 1).trim();
       const val = typeParser(rawVal, currentSection, name);
-      const section = (currentSection !== '') ? (result[currentSection] as IIniObjectSection) : result;
+      const section = currentSection !== '' ? (result[currentSection] as IIniObjectSection) : result;
       if (isOverrideStrategy) {
         section[name] = val;
       } else if (isJoinStrategy) {

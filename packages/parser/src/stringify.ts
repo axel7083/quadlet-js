@@ -1,4 +1,4 @@
-import { IIniObject } from './interfaces/ini-object';
+import type { IIniObject } from './interfaces/ini-object';
 
 export interface IStringifyConfig {
   delimiter?: string;
@@ -30,11 +30,11 @@ export function stringify(data: IIniObject, params?: IStringifyConfig): string {
     result += val;
     return result;
   };
-  let sectionKeys: string[] | null = null;
+  let sectionKeys: string[] | undefined = undefined;
   let curKeyId: number = 0;
 
   for (const key of Object.keys(data)) {
-    while (!sectionKeys || (sectionKeys.length !== curKeyId)) {
+    while (!sectionKeys || sectionKeys.length !== curKeyId) {
       let curKey: string;
       if (sectionKeys) {
         curKey = sectionKeys[curKeyId];
@@ -42,7 +42,8 @@ export function stringify(data: IIniObject, params?: IStringifyConfig): string {
       } else {
         curKey = key;
       }
-      const val: any = (sectionKeys) ? (data[key] as any)[curKey] : data[curKey];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const val: any = sectionKeys ? (data[key] as any)[curKey] : data[curKey];
       const valType = typeof val;
       if (['boolean', 'string', 'number'].includes(valType)) {
         chunks.push(formatPare(curKey, val.toString()));
@@ -50,7 +51,7 @@ export function stringify(data: IIniObject, params?: IStringifyConfig): string {
           break;
         }
       } else if (sectionKeys && Array.isArray(val)) {
-        val.forEach((item) => {
+        val.forEach(item => {
           chunks.push(formatPare(curKey, item.toString()));
         });
       } else if (typeof val === 'object') {
@@ -72,7 +73,7 @@ export function stringify(data: IIniObject, params?: IStringifyConfig): string {
         chunks.push(formatPare(curKey, ''));
       }
     }
-    sectionKeys = null;
+    sectionKeys = undefined;
     curKeyId = 0;
   }
   return chunks.join('\n');

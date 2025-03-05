@@ -7,5 +7,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "exclude": ["vitest.workspace.ts"]
+  "include": ["vitest.workspace.ts", "packages/**/vite.*.ts"]
 }

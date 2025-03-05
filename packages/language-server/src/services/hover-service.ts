@@ -1,5 +1,6 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Hover, Position, Range } from 'vscode-languageserver-types';
+import type { TextDocument } from 'vscode-languageserver-textdocument';
+import type { Hover, Position } from 'vscode-languageserver-types';
+import { Range } from 'vscode-languageserver-types';
 
 export class HoverService {
   async doHover(document: TextDocument, position: Position): Promise<Hover | null> {

@@ -10,9 +10,11 @@ const config: UserConfig = {
   /**
    * A Vite plugin that generates declaration files
    */
-  plugins: [dts({
-    rollupTypes: true,
-  })],
+  plugins: [
+    dts({
+      rollupTypes: true,
+    }),
+  ],
   build: {
     sourcemap: 'inline',
     target: 'esnext',
