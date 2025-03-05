@@ -302,8 +302,7 @@ describe('base js-ini test', () => {
         isIp: '128.0.0.1',
         is0: 0,
         isNaN: NaN,
-        // eslint-disable-next-line no-null/no-null
-        isNULL: null,
+        isNULL: undefined,
         isUndefined: undefined,
       },
     });

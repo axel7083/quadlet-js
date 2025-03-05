@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import dts from 'vite-plugin-dts';
 
 const PACKAGE_ROOT = __dirname;
