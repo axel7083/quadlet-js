@@ -12,15 +12,11 @@ function fromString(content: string, languageId = ''): TextDocument {
 }
 
 test(
-  'key without section ',
-  async () => {
-    const errors = await validation.doValidation(fromString('Annotation=foo=bar', 'container'));
-    expect(errors).toHaveLength(1);
-  },
-  {
-    skip: true,
-  },
-);
+    'key without section ',
+    async () => {
+      const errors = await validation.doValidation(fromString('Annotation=foo=bar', 'container'));
+      expect(errors).toHaveLength(1);
+    });
 
 test('simple ini ', async () => {
   const errors = await validation.doValidation(fromString('[Container]\nAnnotation=foo=bar', 'container'));

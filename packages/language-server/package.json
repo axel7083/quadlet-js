@@ -1,7 +1,7 @@
 {
   "name": "@quadlet/language-server",
   "description": "Quadlet Language Server",
-  "version": "0.8.0-next",
+  "version": "0.1.0-next",
   "icon": "icon.png",
   "publisher": "podman-desktop",
   "type": "module",
