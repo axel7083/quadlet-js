@@ -1,0 +1,10 @@
+**/node_modules/**
+.DS_Store
+# Ignore vite build output
+**/dist/**
+# Ingore eslint cache
+.eslintcache
+# Ignore vitest coverage
+**/coverage/**
+# Ignore JetBrain relate files
+.idea

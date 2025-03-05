@@ -1,0 +1,17 @@
+{
+  "name": "@quadlet/workspace",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "devDependencies": {
+    "vite": "latest",
+    "vitest": "latest"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
