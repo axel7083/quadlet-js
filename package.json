@@ -1,5 +1,6 @@
 {
   "name": "@quadlet/workspace",
+  "version": "0.1.0-next",
   "type": "module",
   "private": true,
   "license": "MIT",
@@ -8,8 +9,8 @@
     "test:run": "vitest run"
   },
   "devDependencies": {
-    "vite": "latest",
-    "vitest": "latest",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.7",
     "prettier": "^3.5.3"
   },
   "workspaces": [
