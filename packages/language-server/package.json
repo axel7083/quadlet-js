@@ -21,7 +21,8 @@
     "vscode-languageserver-types": "^3.17.5"
   },
   "dependencies": {
-    "@quadlet/parser": "workspace:^"
+    "@quadlet/parser": "workspace:^",
+    "@quadlet/types": "workspace:^"
   },
   "files": [
     "dist"

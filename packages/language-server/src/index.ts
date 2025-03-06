@@ -6,7 +6,7 @@ export function getLanguageService(): LanguageService {
   const hover = new HoverService();
   const validation = new ValidationService();
   return {
-    doHover: hover.doHover,
-    doValidation: validation.doValidation,
+    doHover: hover.doHover.bind(hover),
+    doValidation: validation.doValidation.bind(validation),
   };
 }
