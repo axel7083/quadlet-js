@@ -1,8 +1,8 @@
 import type { TextDocument } from 'vscode-languageserver-textdocument';
 import type { Diagnostic } from 'vscode-languageserver-types';
 import { Range } from 'vscode-languageserver-types';
-import type { IIniObject, ParsingError , $Metadata, type IIniObjectSection } from '@quadlet/parser';
-import { $Errors } from '@quadlet/parser';
+import type { IIniObject, ParsingError, IIniObjectSection } from '@quadlet/parser';
+import { $Metadata , $Errors } from '@quadlet/parser';
 import { DocumentsCache } from '../utils/documents-cache';
 import type { QuadletDocument } from '../models/quadlet-document';
 import { IGNORED_SYSTEMD_SECTIONS } from '../utils/constants';

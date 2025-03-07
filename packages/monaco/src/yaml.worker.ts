@@ -90,7 +90,7 @@ export interface YAMLWorker {
 initialize<YAMLWorker, MonacoYamlOptions>((ctx, _languageSettings) => {
   const withDocument =
     <A extends unknown[], R>(fn: (document: TextDocument, ...args: A) => R) =>
-    (uri: string, ...args: A) => {
+    (uri: string, ...args: A): R | undefined => {
       const models = ctx.getMirrorModels();
       for (const model of models) {
         if (String(model.uri) === uri) {
@@ -106,23 +106,23 @@ initialize<YAMLWorker, MonacoYamlOptions>((ctx, _languageSettings) => {
   return {
     doValidation: withDocument(service.doValidation),
 
-    doComplete: withDocument((document, position) => undefined),
+    doComplete: withDocument((document, position): undefined => undefined),
 
-    doDefinition: withDocument((document, position) => undefined),
+    doDefinition: withDocument((document, position): undefined => undefined),
 
-    doDocumentOnTypeFormatting: withDocument((document, position, ch, options) => undefined),
+    doDocumentOnTypeFormatting: withDocument((document, position, ch, options): undefined => undefined),
 
     doHover: withDocument(service.doHover),
 
-    format: withDocument(() => undefined),
+    format: withDocument((): undefined => undefined),
 
     resetSchema: (): boolean => true,
 
-    findDocumentSymbols: withDocument(() => undefined),
+    findDocumentSymbols: withDocument((): undefined => undefined),
 
-    findLinks: withDocument(() => undefined),
+    findLinks: withDocument((): undefined => undefined),
 
-    getCodeAction: withDocument((document, range, context) => undefined),
+    getCodeAction: withDocument((document, range, context): undefined => undefined),
 
     getFoldingRanges: withDocument(document => undefined),
 

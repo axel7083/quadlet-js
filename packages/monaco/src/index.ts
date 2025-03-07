@@ -263,13 +263,13 @@ export function configureMonacoYaml(monaco: MonacoEditor, options?: MonacoYamlOp
   ];
 
   return {
-    dispose() {
+    dispose(): void {
       for (const disposable of disposables) {
         disposable.dispose();
       }
     },
 
-    async update(newOptions) {
+    async update(newOptions): Promise<undefined> {
       workerManager.updateCreateData(Object.assign(createData, newOptions));
       await markerDataProvider.revalidate();
     },

@@ -1,4 +1,4 @@
-import type { IIniObject} from '@quadlet/parser';
+import type { IIniObject } from '@quadlet/parser';
 import { parse } from '@quadlet/parser';
 import {
   QuadletType,
