@@ -1,13 +1,10 @@
-name: Publish example
+name: publish-example
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-
-env:
-  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -45,14 +42,23 @@ jobs:
           path: example/dist
 
   deploy:
+    # Add a dependency to the build job
     needs: build
 
-    name: Build and deploy example
-    runs-on: ubuntu-24.04
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
+    name: Build and deploy example
+    runs-on: ubuntu-24.04
+
+    # Specify runner + deployment step
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
