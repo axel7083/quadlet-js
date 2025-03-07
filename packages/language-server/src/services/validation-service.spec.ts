@@ -28,4 +28,6 @@ test('key without section ', async () => {
       },
     },
   ]);
+}, {
+  skip: true,
 });

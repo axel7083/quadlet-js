@@ -12,7 +12,7 @@ export class HoverService {
 
   async doHover(document: TextDocument, position: Position): Promise<Hover | null> {
     const content = this.#cache.getQuadletDocument(document).document;
-    for (let [section] of Object.entries(content)) {
+    for (const [section] of Object.entries(content)) {
       // check if we hover a section
       if (content[section][$Metadata].lineNumber - 1 === position.line) {
         return {

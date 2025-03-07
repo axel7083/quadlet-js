@@ -1,5 +1,5 @@
-import { QuadletDocument } from '../models/quadlet-document';
-import { TextDocument } from 'vscode-languageserver-textdocument';
+import type { QuadletDocument } from '../models/quadlet-document';
+import type { TextDocument } from 'vscode-languageserver-textdocument';
 import { QuadletType } from '@quadlet/types';
 import { ParserWrapper } from './parser-wrapper';
 
