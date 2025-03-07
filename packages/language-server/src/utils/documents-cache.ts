@@ -38,6 +38,7 @@ export class DocumentsCache {
   }
 
   protected ensureCache(text: TextDocument): QuadletDocument {
+    console.log('[DocumentsCache] ensureCache uri', text.uri);
     const key = text.uri;
     // try to get the cache
     let entry = this.#cache.get(key);
@@ -51,6 +52,9 @@ export class DocumentsCache {
         type: type,
       };
       this.#cache.set(key, entry);
+      console.log('[DocumentsCache] cache miss');
+    } else {
+      console.log('[DocumentsCache] cache hit');
     }
 
     // return the entry

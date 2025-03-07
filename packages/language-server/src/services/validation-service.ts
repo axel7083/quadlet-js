@@ -16,6 +16,7 @@ export class ValidationService {
   }
 
   protected parsingErrorToDiagnostic(errors: Array<ParsingError>): Array<Diagnostic> {
+    console.log('parsingErrorToDiagnostic', errors);
     return errors.map(err => ({
       /**
        * The {@link Diagnostic} uses an LSP range which is different from a monaco.Range
@@ -49,6 +50,7 @@ export class ValidationService {
   }
 
   protected validate(quadlet: QuadletDocument): Array<Diagnostic> {
+    console.log('[Validation Service]', quadlet.type);
     let output: Array<Diagnostic> = [];
 
     const ini: IIniObject = quadlet.document;
@@ -77,6 +79,7 @@ export class ValidationService {
       case QuadletType.NETWORK:
       case QuadletType.KUBE:
       case QuadletType.BUILD:
+        console.log(`[ValidationService] no additional validation for quadlet type ${quadlet.type}`);
         break;
     }
 

@@ -31,7 +31,20 @@ onMount(async () => {
   // solution from https://github.com/vitejs/vite/discussions/1791#discussioncomment-9281911
   import('monaco-editor/esm/vs/editor/editor.api')
     .then(monaco => {
-        const model = editor.createModel(content, language, uri);
+
+        let model: editor.IModel;
+        if(uri) {
+            const previous = editor.getModel(uri);
+            if(previous) {
+                model = previous;
+                model.setValue(content);
+            } else {
+                model = editor.createModel(content, language, uri);
+            }
+        } else {
+            model = editor.createModel(content, language);
+        }
+
       editorInstance = monaco.editor.create(editorContainer, {
           model: model,
         language: language,

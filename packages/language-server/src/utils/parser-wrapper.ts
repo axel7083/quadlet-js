@@ -1,5 +1,15 @@
 import { IIniObject, parse } from '@quadlet/parser';
-import { QuadletType } from '@quadlet/types';
+import {
+  QuadletType,
+  CONTAINER_KEYS,
+  IMAGE_KEYS,
+  POD_KEYS,
+  NETWORK_KEYS,
+  VOLUMES_KEYS,
+  BUILD_KEYS,
+  KUBE_KEYS,
+  type ALL_KEYS,
+} from '@quadlet/types';
 import { IGNORED_SYSTEMD_SECTIONS } from './constants';
 
 /**
@@ -8,15 +18,56 @@ import { IGNORED_SYSTEMD_SECTIONS } from './constants';
  */
 export class ParserWrapper {
   protected autoTypeContainer(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!CONTAINER_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Container section`);
+
+    // additional synthax checks
     switch (key) {
-      case 'Image':
-        return val;
       case 'Annotation':
         if (!val.includes('=')) throw new Error('format should be Annotation=name=value');
         return val;
       default:
-        throw new Error(`unknown key ${key}`);
+        return val;
     }
+  }
+
+  protected autoTypeImage(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!IMAGE_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Image section`);
+
+    return val;
+  }
+
+  protected autoTypePod(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!POD_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Pod section`);
+
+    return val;
+  }
+
+  protected autoTypeVolume(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!VOLUMES_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Volume section`);
+
+    return val;
+  }
+  protected autoTypeNetwork(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!NETWORK_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Network section`);
+
+    return val;
+  }
+  protected autoTypeKube(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!KUBE_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Kube section`);
+
+    return val;
+  }
+  protected autoTypeBuild(key: string, val: string): boolean | number | string {
+    // ensure the key is expected
+    if (!BUILD_KEYS.has(key as ALL_KEYS)) throw new Error(`${key} cannot be use under Build section`);
+
+    return val;
   }
 
   protected autoType(type: QuadletType, val: string, section: string, key: string): boolean | number | string {
@@ -28,12 +79,17 @@ export class ParserWrapper {
       case QuadletType.CONTAINER:
         return this.autoTypeContainer(key, val);
       case QuadletType.IMAGE:
+        return this.autoTypeImage(key, val);
       case QuadletType.POD:
+        return this.autoTypePod(key, val);
       case QuadletType.VOLUME:
+        return this.autoTypeVolume(key, val);
       case QuadletType.NETWORK:
+        return this.autoTypeNetwork(key, val);
       case QuadletType.KUBE:
+        return this.autoTypeKube(key, val);
       case QuadletType.BUILD:
-        throw new Error('not supported');
+        return this.autoTypeBuild(key, val);
     }
   }
 
