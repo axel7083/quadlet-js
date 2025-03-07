@@ -12,8 +12,12 @@
     "format:fix": "prettier --write \"packages/**/*.{ts,js,json}\"",
     "typecheck:parser": "tsc --noEmit --project packages/parser",
     "typecheck": "npm run typecheck:parser",
+    "build:types": "cd packages/types && npm run build",
     "build:parser": "cd packages/parser && npm run build",
-    "build": "npm run build:parser"
+    "build:language-server": "cd packages/language-server && npm run build",
+    "build:monaco": "cd packages/monaco && npm run build",
+    "build": "npm run build:types && npm run build:parser && npm run build:language-server && npm run build:monaco",
+    "build:example": "cd example && npm run build"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",

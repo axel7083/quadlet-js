@@ -1,0 +1,48 @@
+{
+  "name": "@quadlet/monaco",
+  "description": "Monaco integration",
+  "version": "0.1.0-next",
+  "icon": "icon.png",
+  "publisher": "podman-desktop",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run --coverage --passWithNoTests"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./yaml.worker": {
+      "default": "./dist/yaml.worker.cjs",
+      "types": "./dist/yaml.worker.d.ts"
+    }
+  },
+  "devDependencies": {
+    "vite-plugin-dts": "^4.5.3",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.7"
+  },
+  "peerDependencies": {
+    "monaco-editor": ">=0.36"
+  },
+  "dependencies": {
+    "@quadlet/language-server": "workspace:^",
+    "@quadlet/types": "workspace:^",
+    "jsonc-parser": "^3.0.0",
+    "monaco-languageserver-types": "^0.4.0",
+    "monaco-marker-data-provider": "^1.0.0",
+    "monaco-types": "^0.1.0",
+    "monaco-worker-manager": "^2.0.0",
+    "path-browserify": "^1.0.0",
+    "vscode-languageserver-textdocument": "^1.0.0",
+    "vscode-languageserver-types": "^3.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

@@ -4,6 +4,6 @@ import type { Position, Hover, Diagnostic } from 'vscode-languageserver-types';
 export interface LanguageService {
   // configure: (settings: LanguageSettings) => void;
   // doComplete: (document: TextDocument, position: Position, isKubernetes: boolean) => Promise<CompletionList>;
-  doValidation: (document: TextDocument) => Promise<Diagnostic[]>;
+  doValidation: (document: TextDocument) => Promise<Array<Diagnostic>>;
   doHover: (document: TextDocument, position: Position) => Promise<Hover | null>;
 }

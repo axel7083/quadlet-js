@@ -65,6 +65,11 @@ export function parse(data: string, params: IParseConfig = {}): IIniObject {
       if (match) {
         currentSection = match[1].trim();
 
+        if (currentSection in result) {
+          recordError(new ParsingError(line, lineNumber, 'duplicate section not allowed'));
+          continue;
+        }
+
         // Initialize the section if it hasn't been set yet.
         if (!(currentSection in result)) {
           result[currentSection] = {
